@@ -113,6 +113,11 @@ export async function registerRoutes(
     res.json(updated);
   });
 
+  app.delete(api.dailyLogs.delete.path, async (req, res) => {
+    await storage.deleteDailyLog(Number(req.params.id));
+    res.status(204).send();
+  });
+
   // === CONSUMPTION ===
   app.get(api.consumption.listByLog.path, async (req, res) => {
     const records = await storage.getConsumption(Number(req.params.logId));

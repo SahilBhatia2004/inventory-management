@@ -184,6 +184,22 @@ export function usePredictConsumption() {
   });
 }
 
+export function useDeleteDailyLog() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const url = buildUrl(api.dailyLogs.delete.path, { id });
+      const res = await fetch(url, { method: api.dailyLogs.delete.method });
+      if (!res.ok) throw new Error("Failed to delete log");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.dailyLogs.list.path] });
+      toast({ title: "Log Deleted", description: "Entry removed from register." });
+    },
+  });
+}
+
 // === CONSUMPTION ===
 
 export function useConsumption(logId: number) {

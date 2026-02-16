@@ -1,5 +1,5 @@
 import { LayoutShell } from "@/components/layout-shell";
-import { useInventory, useAddStock } from "@/hooks/use-havaldar";
+import { useInventory, useAddStock, useDeleteItem } from "@/hooks/use-havaldar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { PackagePlus, AlertTriangle } from "lucide-react";
+import { PackagePlus, AlertTriangle, Trash2 } from "lucide-react";
 
 export default function Inventory() {
   const { data: inventory, isLoading } = useInventory();
   const addStock = useAddStock();
+  const deleteItem = useDeleteItem();
   const [selectedItem, setSelectedItem] = useState<{id: number, name: string, unit: string} | null>(null);
   const [quantity, setQuantity] = useState("");
   const [reason, setReason] = useState("Purchase");
@@ -95,11 +96,25 @@ export default function Inventory() {
                     <h3 className="font-bold text-lg">{inv.item?.name}</h3>
                     <p className="text-sm text-muted-foreground uppercase">{inv.item?.category}</p>
                   </div>
-                  {isLow && (
-                    <div className="bg-destructive/10 text-destructive p-2 rounded-full animate-pulse">
-                      <AlertTriangle className="h-5 w-5" />
-                    </div>
-                  )}
+                  <div className="flex gap-2">
+                    {isLow && (
+                      <div className="bg-destructive/10 text-destructive p-2 rounded-full animate-pulse">
+                        <AlertTriangle className="h-5 w-5" />
+                      </div>
+                    )}
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => {
+                        if (confirm(`Delete ${inv.item?.name} and all its stock history?`)) {
+                          deleteItem.mutate(inv.itemId);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 
                 <div className="flex items-baseline gap-1 mb-6">

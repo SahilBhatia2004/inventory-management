@@ -1,7 +1,7 @@
 import { LayoutShell } from "@/components/layout-shell";
-import { useDailyLogs, useConsumption } from "@/hooks/use-havaldar";
+import { useDailyLogs, useConsumption, useDeleteDailyLog } from "@/hooks/use-havaldar";
 import { format } from "date-fns";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import { useState } from "react";
 
 export default function Reports() {
   const { data: logs, isLoading } = useDailyLogs();
+  const deleteLog = useDeleteDailyLog();
   const [selectedLog, setSelectedLog] = useState<any>(null);
   const { data: consumption } = useConsumption(selectedLog?.id);
 
@@ -79,9 +80,23 @@ export default function Reports() {
                  </td>
                  <td className="p-4 text-right font-medium">₹{log.totalCost?.toLocaleString()}</td>
                  <td className="p-4 text-right">
-                   <Button variant="ghost" size="icon" onClick={() => setSelectedLog(log)}>
-                     <Eye className="h-4 w-4" />
-                   </Button>
+                   <div className="flex justify-end gap-2">
+                     <Button variant="ghost" size="icon" onClick={() => setSelectedLog(log)}>
+                       <Eye className="h-4 w-4" />
+                     </Button>
+                     <Button 
+                       variant="ghost" 
+                       size="icon" 
+                       className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                       onClick={() => {
+                         if (confirm("Delete this register entry?")) {
+                           deleteLog.mutate(log.id);
+                         }
+                       }}
+                     >
+                       <Trash2 className="h-4 w-4" />
+                     </Button>
+                   </div>
                  </td>
                </tr>
              ))}

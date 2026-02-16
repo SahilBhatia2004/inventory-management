@@ -242,6 +242,10 @@ export class DatabaseStorage implements IStorage {
     if (count === 0) return 0;
     return totalUnitPerMan / count; // Average unit per person
   }
+  async deleteDailyLog(id: number): Promise<void> {
+    await db.delete(consumption).where(eq(consumption.logId, id));
+    await db.delete(dailyLogs).where(eq(dailyLogs.id, id));
+  }
 }
 
 export const storage = new DatabaseStorage();

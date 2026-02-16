@@ -107,6 +107,14 @@ export const api = {
         200: z.any(),
       },
     },
+    delete: {
+      method: 'DELETE' as const,
+      path: '/api/daily-logs/:id' as const,
+      responses: {
+        204: z.void(),
+        404: errorSchemas.notFound,
+      },
+    },
     // The "Magic" button - Predict consumption for a log
     predict: {
       method: 'POST' as const,
