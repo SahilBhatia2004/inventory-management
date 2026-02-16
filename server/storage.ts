@@ -63,6 +63,8 @@ export class DatabaseStorage implements IStorage {
 
   async deleteItem(id: number): Promise<void> {
     // Note: In real app, might want soft delete or check foreign keys first
+    await db.delete(stockTransactions).where(eq(stockTransactions.itemId, id));
+    await db.delete(consumption).where(eq(consumption.itemId, id));
     await db.delete(inventory).where(eq(inventory.itemId, id));
     await db.delete(items).where(eq(items.id, id));
   }
