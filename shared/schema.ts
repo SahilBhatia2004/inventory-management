@@ -82,7 +82,6 @@ export const consumptionRelations = relations(consumption, ({ one }) => ({
 // === BASE SCHEMAS ===
 export const insertItemSchema = createInsertSchema(items).omit({ id: true });
 export const insertInventorySchema = createInsertSchema(inventory).omit({ id: true, lastUpdated: true });
-export const insertDailyLogSchema = createInsertSchema(dailyLogs).omit({ id: true, createdAt: true, totalCost: true });
 export const insertConsumptionSchema = createInsertSchema(consumption).omit({ id: true });
 export const insertTransactionSchema = createInsertSchema(stockTransactions).omit({ id: true, date: true });
 
@@ -99,9 +98,9 @@ export type UpdateStockRequest = { quantity: number; reason: string }; // Custom
 
 // Daily Logs
 export type DailyLog = typeof dailyLogs.$inferSelect;
-export type CreateDailyLogRequest = InsertDailyLogSchema; // Renaming for clarity
-type InsertDailyLogSchema = z.infer<typeof insertDailyLogSchema>;
-export type UpdateDailyLogRequest = Partial<InsertDailyLogSchema> & { status?: "Draft" | "Confirmed" };
+export const insertDailyLogSchema = createInsertSchema(dailyLogs).omit({ id: true, createdAt: true, totalCost: true });
+export type CreateDailyLogRequest = z.infer<typeof insertDailyLogSchema>;
+export type UpdateDailyLogRequest = Partial<CreateDailyLogRequest> & { status?: "Draft" | "Confirmed" };
 
 // Consumption
 export type ConsumptionRecord = typeof consumption.$inferSelect & { item?: Item };

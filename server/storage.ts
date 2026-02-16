@@ -169,7 +169,7 @@ export class DatabaseStorage implements IStorage {
       total: sql<number>`sum(${consumption.calculatedCost})` 
     }).from(consumption).where(eq(consumption.logId, logId));
     
-    await this.updateDailyLog(logId, { totalCost: result[0]?.total || 0 });
+    await this.updateDailyLog(logId, { totalCost: result[0]?.total || 0 } as any);
   }
 
   // === LOGIC & STATS ===

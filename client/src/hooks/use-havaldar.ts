@@ -4,7 +4,6 @@ import {
   type Item, 
   type InsertItem, 
   type DailyLog, 
-  type InsertDailyLogSchema,
   type InventoryItem,
   type ConsumptionRecord,
   type DashboardStats
@@ -127,7 +126,7 @@ export function useCreateDailyLog() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
-    mutationFn: async (data: InsertDailyLogSchema) => {
+    mutationFn: async (data: any) => {
       const res = await fetch(api.dailyLogs.create.path, {
         method: api.dailyLogs.create.method,
         headers: { "Content-Type": "application/json" },
@@ -150,7 +149,7 @@ export function useUpdateDailyLog() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
-    mutationFn: async ({ id, ...data }: Partial<InsertDailyLogSchema> & { id: number; status?: string }) => {
+    mutationFn: async ({ id, ...data }: any) => {
       const url = buildUrl(api.dailyLogs.update.path, { id });
       const res = await fetch(url, {
         method: api.dailyLogs.update.method,
